@@ -37,21 +37,21 @@ class _LoginViewState extends State<LoginView> {
     final viewModel = context.watch<LoginViewModel>();
 
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       appBar: const CustomAppbar(icon: Icons.arrow_back),
-      
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
 
         child: Column(
           spacing: 32,
-          
+
           children: [
             DoubleTextField(
-              labelText: "Enter your information here", 
-              topFieldHintText: "Email address", 
-              bottomFieldHintText: "Password", 
-              topFieldController: _emailController, 
+              labelText: "Enter your information here",
+              topFieldHintText: "Email address",
+              bottomFieldHintText: "Password",
+              topFieldController: _emailController,
               bottomFieldController: _passwordController,
               errorText: viewModel.errorMessage,
               bottomFieldIsPassword: true,
@@ -62,40 +62,49 @@ class _LoginViewState extends State<LoginView> {
 
               children: [
                 CustomButton(
-                  label: "LOG IN", 
+                  label: "LOG IN",
                   oneShot: true,
                   onPressed: viewModel.isLoading
-                    ? null 
-                    : () async {
-                        final success = await viewModel.login(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        );
-                        if (success && context.mounted) {
-                          context.go('/');
-                        }
-                      },
+                      ? null
+                      : () async {
+                          final success = await viewModel.login(
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                          );
+                          if (success && context.mounted) {
+                            context.go('/');
+                          }
+                        },
                 ),
 
                 TextButton(
-                  onPressed: () => context.push('/forgot_password'), 
-                  child: Text("FORGOT PASSWORD", 
+                  onPressed: () => context.push('/forgot_password'),
+                  child: Text(
+                    "FORGOT PASSWORD",
                     style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      color: context.myColors.primary
+                      color: context.myColors.primary,
                     ),
-                  ))
+                  ),
+                ),
               ],
             ),
-            
-            Spacer(),
+
+            const Spacer(),
 
             CustomButton(
-              label: "GOOGLE", 
+              label: "GOOGLE",
               variant: ButtonVariant.neutral,
               outlined: true,
-              onPressed: viewModel.isLoading ? null : () async {
-                  // TODO: implement Google Sign in through ViewModel
-                },
+              oneShot: true,
+              onPressed: viewModel.isLoading
+                  ? null
+                  : () async {
+                      final success = await viewModel.loginWithGoogle();
+
+                      if (success && context.mounted) {
+                        context.go('/');
+                      }
+                    },
               icon: Image.asset(
                 'assets/images/Google.png',
                 height: 24,
