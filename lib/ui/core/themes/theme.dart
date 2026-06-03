@@ -15,13 +15,15 @@ class AppTheme {
     primaryVariantLight: Color(0xFF666976),
     error: Color(0xFFFE4A4E),
     errorVariant: Color(0xFFEB2A2E),
+    errorLight: Color(0xFFFFC9CA),
+    errorVariantLight: Color(0xFFF9C0C1),
     neutralDarkest: Color(0xFF4B4B4B),
     neutralMidDark: Color(0xFF777777),
     neutralDark: Color(0xFFAFAFAF),
     neutralLight: Color(0xFFE5E5E5),
     neutralMidLight: Color(0xFFF7F7F7),
     neutralLightest: Color(0xFFFFFFFF),
-    darken: Color.fromARGB(50, 75, 75, 75),
+    darken: Color.fromARGB(160, 0, 0, 0),
   );
 
   static ThemeData get light => ThemeData(

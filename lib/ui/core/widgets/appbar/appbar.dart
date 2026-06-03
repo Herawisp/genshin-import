@@ -7,6 +7,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   final String? titleText;
   final bool showTitleText;
   final VoidCallback? onBackPress;
+  final Color? iconColor;
 
   const CustomAppbar({
     super.key,
@@ -14,7 +15,8 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.showTitleText = false,
     this.centerTitle = false,
     this.titleText,
-    this.onBackPress
+    this.onBackPress,
+    this.iconColor,
   });
   
   /* ================================================================================== */
@@ -26,7 +28,11 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
 
       leading: IconButton(
-        icon: Icon(icon, size: 24),
+        icon: Icon(
+          icon, 
+          size: 24, 
+          color: iconColor ?? context.myColors.neutralDarkest,
+        ),
         color: context.myColors.neutralDarkest,
         onPressed: onBackPress ?? () => Navigator.of(context).pop(),
       ),

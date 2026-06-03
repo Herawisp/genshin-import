@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
 
 enum ButtonVariant { 
-  primary, neutral
+  primary, neutral, error
 }
 
 class CustomButton extends StatefulWidget {
@@ -64,6 +64,8 @@ class _CustomButtonState extends State<CustomButton> {
         return (context.myColors.primary!, context.myColors.primaryVariant!, context.myColors.neutralLightest!);
       case ButtonVariant.neutral:
         return (context.myColors.neutralLightest!, context.myColors.neutralLight!, context.myColors.primary!);
+      case ButtonVariant.error:
+        return (context.myColors.error!, context.myColors.errorVariant!, context.myColors.neutralLightest!);
     }
   }
 

@@ -7,6 +7,8 @@ class MyColors extends ThemeExtension<MyColors> {
   final Color? primaryVariantLight;
   final Color? error;
   final Color? errorVariant;
+  final Color? errorLight;
+  final Color? errorVariantLight;
   final Color? neutralDarkest;
   final Color? neutralMidDark;
   final Color? neutralDark;
@@ -23,6 +25,8 @@ class MyColors extends ThemeExtension<MyColors> {
     required this.primaryVariantLight,
     required this.error,
     required this.errorVariant,
+    required this.errorLight,
+    required this.errorVariantLight,
     required this.neutralDarkest,
     required this.neutralMidDark,
     required this.neutralDark,
@@ -61,6 +65,8 @@ class MyColors extends ThemeExtension<MyColors> {
       primaryVariantLight: primaryVariantLight ?? this.primaryVariantLight,
       error: error ?? this.error,
       errorVariant: errorVariant ?? this.errorVariant,
+      errorLight: errorLight ?? this.errorLight,
+      errorVariantLight: errorVariantLight ?? this.errorVariantLight,
       neutralDarkest: neutralDarkest ?? this.neutralDarkest,
       neutralMidDark: neutralMidDark ?? this.neutralMidDark,
       neutralDark: neutralDark ?? this.neutralDark,
@@ -81,6 +87,8 @@ class MyColors extends ThemeExtension<MyColors> {
       primaryVariantLight: Color.lerp(primaryVariantLight, other.primaryVariantLight, t),
       error: Color.lerp(error, other.error, t),
       errorVariant: Color.lerp(errorVariant, other.errorVariant, t),
+      errorLight: Color.lerp(errorLight, other.errorLight, t),
+      errorVariantLight: Color.lerp(errorVariantLight, other.errorVariantLight, t),
       neutralDarkest: Color.lerp(neutralDarkest, other.neutralDarkest, t),
       neutralMidDark: Color.lerp(neutralMidDark, other.neutralMidDark, t),
       neutralDark: Color.lerp(neutralDark, other.neutralDark, t),

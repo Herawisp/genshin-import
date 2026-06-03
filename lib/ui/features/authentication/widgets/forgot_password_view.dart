@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:genshin_import/ui/core/widgets/appbar.dart';
+import 'package:genshin_import/ui/core/widgets/appbar/appbar.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
 import 'package:genshin_import/ui/core/widgets/text_fields/single_text_field.dart';
-import 'package:genshin_import/ui/features/authentication/forgot_password_view/view_models/forgot_password_view_model.dart';
-import 'package:genshin_import/ui/features/authentication/forgot_password_view/widgets/success_bottom_sheet.dart';
+import 'package:genshin_import/ui/features/authentication/view_models/forgot_password_view_model.dart';
+import 'package:genshin_import/ui/features/authentication/widgets/success_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class ForgotPasswordView extends StatefulWidget {

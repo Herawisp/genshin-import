@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
-import 'package:genshin_import/ui/core/widgets/appbar.dart';
+import 'package:genshin_import/ui/core/widgets/appbar/appbar.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
 import 'package:genshin_import/ui/core/widgets/text_fields/double_text_field.dart';
-import 'package:genshin_import/ui/features/authentication/login_view/view_models/login_view_model.dart';
+import 'package:genshin_import/ui/features/authentication/view_models/login_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
