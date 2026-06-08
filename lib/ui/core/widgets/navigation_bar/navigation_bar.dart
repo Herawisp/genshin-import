@@ -20,7 +20,6 @@ class CustomNavbar extends StatefulWidget {
 }
 
 class _CustomNavbarState extends State<CustomNavbar> {
-
   late int _currentTabIndex;
 
   @override
@@ -44,10 +43,7 @@ class _CustomNavbarState extends State<CustomNavbar> {
       decoration: BoxDecoration(
         color: context.myColors.neutralLightest,
         border: Border(
-          top: BorderSide(
-            color: context.myColors.neutralDark!,
-            width: 2,
-          ),
+          top: BorderSide(color: context.myColors.neutralDark!, width: 2),
         ),
         boxShadow: const [
           BoxShadow(

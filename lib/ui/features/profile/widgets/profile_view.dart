@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:genshin_import/data/services/auth_session.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
 import 'package:genshin_import/ui/core/widgets/appbar/section_header.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
-import 'package:genshin_import/ui/features/profile/widgets/change_username_view.dart';
 import 'package:go_router/go_router.dart';
 
 /* =================================================================================================== */
@@ -27,41 +27,57 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
+  Future<void> _openProfileRoute(String route) async {
+    final changed = await context.push<bool>(route);
+
+    if (!mounted) return;
+
+    if (changed == true) {
+      setState(() {});
+    }
+  }
+
   /* ================================================================================================= */
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = AuthSession.user ?? {};
+    final name = currentUser['name']?.toString() ?? 'Guest';
+    final email = currentUser['email']?.toString() ?? 'Not logged in';
+
     return Container(
       color: context.myColors.neutralLightest,
 
       child: Column(
         children: [
-          SectionHeader(
-            title: 'PROFILE',
-            subtitle: 'Manage your account',
-          ),
-      
+          SectionHeader(title: 'PROFILE', subtitle: 'Manage your account'),
+
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
               spacing: 32,
-            
+
               children: [
                 Column(
                   spacing: 8,
-      
+
                   children: [
                     ProfileAvatar(),
-            
+
                     Text(
-                      'John Doe',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        color: context.myColors.neutralDarkest,
+                      name,
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(color: context.myColors.neutralDarkest),
+                    ),
+                    Text(
+                      email,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: context.myColors.neutralMidDark,
                       ),
-                    )
+                    ),
                   ],
                 ),
-            
+
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   clipBehavior: Clip.antiAlias,
@@ -69,7 +85,7 @@ class _ProfileViewState extends State<ProfileView> {
                     color: context.myColors.neutralMidLight,
                     borderRadius: BorderRadius.circular(16),
                   ),
-      
+
                   child: Material(
                     color: Colors.transparent,
                     child: SingleChildScrollView(
@@ -78,36 +94,36 @@ class _ProfileViewState extends State<ProfileView> {
                           SettingItem(
                             icon: Icons.account_circle,
                             label: 'Change Username',
-                            onTap: () => context.push('/change_username'),
+                            onTap: () => _openProfileRoute('/change_username'),
                           ),
-                                
+
                           SettingItem(
                             icon: Icons.email,
                             label: 'Change Email',
-                            onTap: () => context.push('/change_email'),
+                            onTap: () => _openProfileRoute('/change_email'),
                           ),
-                                
+
                           SettingItem(
                             icon: Icons.lock,
                             label: 'Change Password',
-                            onTap: () => context.push('/change_password'),
+                            onTap: () => _openProfileRoute('/change_password'),
                           ),
-                                
+
                           SettingItem(
                             icon: Icons.logout,
                             label: 'Logout',
                             showBottomDivider: false,
                             onTap: () => _showLogoutDialog(context),
                           ),
-                        ]
+                        ],
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
-          )
-        ]
+          ),
+        ],
       ),
     );
   }
@@ -117,18 +133,14 @@ class _ProfileViewState extends State<ProfileView> {
 /* =================================================================================================== */
 
 class LogoutDialog extends StatelessWidget {
-  const LogoutDialog({
-    super.key,
-  });
+  const LogoutDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: context.myColors.neutralMidLight,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+
       actionsOverflowDirection: VerticalDirection.down,
       actionsPadding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       actionsAlignment: MainAxisAlignment.center,
@@ -136,17 +148,17 @@ class LogoutDialog extends StatelessWidget {
       title: Text(
         'Logout',
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: context.myColors.neutralDarkest,
-            ),
+          color: context.myColors.neutralDarkest,
+        ),
       ),
 
       content: Text(
         'Are you sure you want to log out of your account?',
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.myColors.neutralDarkest,
-            ),
+          color: context.myColors.neutralDarkest,
+        ),
       ),
-      
+
       actions: [
         SizedBox(
           width: double.infinity,
@@ -154,6 +166,8 @@ class LogoutDialog extends StatelessWidget {
             label: 'Logout',
             onPressed: () async {
               context.pop();
+              AuthSession.clear();
+              context.go('/');
             },
             variant: ButtonVariant.error,
           ),
@@ -167,8 +181,8 @@ class LogoutDialog extends StatelessWidget {
               'Cancel',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    color: context.myColors.neutralDarkest,
-                  ),
+                color: context.myColors.neutralDarkest,
+              ),
             ),
           ),
         ),
@@ -181,23 +195,28 @@ class LogoutDialog extends StatelessWidget {
 /* =================================================================================================== */
 
 class ProfileAvatar extends StatelessWidget {
-  const ProfileAvatar({
-    super.key,
-  });
+  const ProfileAvatar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(
-          color: context.myColors.neutralDark!,
-          width: 2,
-        ),
+        border: Border.all(color: context.myColors.neutralDark!, width: 2),
       ),
-      child: CircleAvatar(
-        radius: 50,
-        backgroundColor: context.myColors.neutralLight,
+      child: ClipOval(
+        child: Image.asset(
+          'assets/images/profile_icon.png',
+          width: 100,
+          height: 100,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return CircleAvatar(
+              radius: 50,
+              backgroundColor: context.myColors.neutralLight,
+            );
+          },
+        ),
       ),
     );
   }
@@ -226,18 +245,15 @@ class SettingItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: onTap,
-          
+
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             child: Row(
               spacing: 16,
-                    
+
               children: [
-                Icon(
-                  icon,
-                  color: context.myColors.neutralDarkest,
-                ),
-                    
+                Icon(icon, color: context.myColors.neutralDarkest),
+
                 Expanded(
                   child: Text(
                     label,
@@ -246,7 +262,7 @@ class SettingItem extends StatelessWidget {
                     ),
                   ),
                 ),
-                    
+
                 Icon(
                   Icons.chevron_right,
                   color: context.myColors.neutralDarkest,

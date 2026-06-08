@@ -35,10 +35,7 @@ class LoginViewModel extends ChangeNotifier {
     _setErrorMessage(null);
 
     try {
-      await _authApiService.login(
-        email: trimmedEmail,
-        password: password,
-      );
+      await _authApiService.login(email: trimmedEmail, password: password);
       return true;
     } on AuthApiException catch (error) {
       _setErrorMessage(error.message);

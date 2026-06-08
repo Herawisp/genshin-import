@@ -7,7 +7,6 @@ extension MyThemeX on BuildContext {
 }
 
 class AppTheme {
-
   static const lightColors = MyColors(
     primary: Color(0xFF3E4557),
     primaryVariant: Color(0xFF2C2F40),
@@ -39,6 +38,4 @@ class AppTheme {
       cursorColor: lightColors.primary,
     ),
   );
-
-  
 }

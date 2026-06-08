@@ -10,7 +10,7 @@ class NavigationItem extends StatefulWidget {
     super.key,
     required this.onPressed,
     required this.icon,
-    this.size = 64
+    this.size = 64,
   });
 
   @override
@@ -62,12 +62,14 @@ class _CustomNavigationItemState extends State<NavigationItem> {
                 child: Container(
                   height: widget.size,
                   decoration: BoxDecoration(
-                    color: isDisabled ? context.myColors.primaryVariant : Colors.transparent,
+                    color: isDisabled
+                        ? context.myColors.primaryVariant
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
               ),
-        
+
               // INTERACTIVE TOP LAYER
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 60),
@@ -78,9 +80,11 @@ class _CustomNavigationItemState extends State<NavigationItem> {
                   height: widget.size,
                   child: FilledButton(
                     statesController: _controller,
-                    onPressed: isDisabled? () {} : widget.onPressed,
+                    onPressed: isDisabled ? () {} : widget.onPressed,
                     style: FilledButton.styleFrom(
-                      backgroundColor: isDisabled ?  context.myColors.primary : Colors.transparent,
+                      backgroundColor: isDisabled
+                          ? context.myColors.primary
+                          : Colors.transparent,
                       shadowColor: Colors.transparent,
                       padding: EdgeInsets.zero,
                       elevation: 0,
@@ -91,8 +95,10 @@ class _CustomNavigationItemState extends State<NavigationItem> {
                     child: Icon(
                       widget.icon,
                       size: widget.size * 0.48,
-                      color: isDisabled ? context.myColors.neutralLightest : context.myColors.neutralDark,
-                    )
+                      color: isDisabled
+                          ? context.myColors.neutralLightest
+                          : context.myColors.neutralDark,
+                    ),
                   ),
                 ),
               ),

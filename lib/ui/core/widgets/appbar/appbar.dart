@@ -18,7 +18,7 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
     this.onBackPress,
     this.iconColor,
   });
-  
+
   /* ================================================================================== */
   @override
   Widget build(BuildContext context) {
@@ -29,20 +29,22 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
 
       leading: IconButton(
         icon: Icon(
-          icon, 
-          size: 24, 
+          icon,
+          size: 24,
           color: iconColor ?? context.myColors.neutralDarkest,
         ),
         color: context.myColors.neutralDarkest,
         onPressed: onBackPress ?? () => Navigator.of(context).pop(),
       ),
 
-      title: showTitleText ? Text(
-        titleText!,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: context.myColors.neutralDarkest,
-        )
-      ) : null
+      title: showTitleText
+          ? Text(
+              titleText!,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: context.myColors.neutralDarkest,
+              ),
+            )
+          : null,
     );
   }
 

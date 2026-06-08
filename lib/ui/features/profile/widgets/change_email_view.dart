@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:genshin_import/data/services/auth_api_service.dart';
+import 'package:genshin_import/data/services/auth_session.dart';
+import 'package:genshin_import/ui/core/themes/theme.dart';
 import 'package:genshin_import/ui/core/widgets/appbar/appbar.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
 import 'package:genshin_import/ui/core/widgets/text_fields/single_text_field.dart';
+import 'package:go_router/go_router.dart';
 
 /* =================================================================================================== */
 /* =================================================================================================== */
 
 class ChangeEmailView extends StatefulWidget {
-  const ChangeEmailView({ super.key, });
+  const ChangeEmailView({super.key});
 
   @override
   State<ChangeEmailView> createState() => _ChangeEmailViewState();
@@ -17,9 +21,12 @@ class ChangeEmailView extends StatefulWidget {
 /* =================================================================================================== */
 
 class _ChangeEmailViewState extends State<ChangeEmailView> {
+  final AuthApiService _authApiService = AuthApiService();
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   bool _isButtonEnabled = false;
+  bool _isSaving = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -44,14 +51,62 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
     final passwordText = _passwordController.text.trim();
 
     setState(() {
-      _isButtonEnabled = emailText.isNotEmpty && passwordText.isNotEmpty;
+      _isButtonEnabled =
+          emailText.isNotEmpty && passwordText.isNotEmpty && !_isSaving;
     });
   }
 
   /* ================================================================================================= */
 
+  Future<void> _saveEmail() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+
+    if (email.isEmpty) {
+      setState(() => _errorMessage = 'Email is required');
+      return;
+    }
+
+    if (password.isEmpty) {
+      setState(() => _errorMessage = 'Password is required');
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _isSaving = true;
+      _errorMessage = null;
+    });
+
+    try {
+      await _authApiService.updateEmail(email: email, password: password);
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email updated successfully')),
+      );
+      context.pop(true);
+    } on AuthApiException catch (error) {
+      if (mounted) {
+        setState(() => _errorMessage = error.message);
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(() => _errorMessage = 'Unable to update email');
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isSaving = false);
+        _onTextChanged();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentEmail = AuthSession.user?['email']?.toString() ?? '-';
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
 
@@ -67,11 +122,11 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
           child: Column(
             spacing: 16,
             children: [
-
               SingleTextField(
                 labelText: 'New Email Address',
                 hintText: 'Enter your new email',
-                controller: _emailController, 
+                supportingText: 'Current email: $currentEmail',
+                controller: _emailController,
               ),
 
               SingleTextField(
@@ -82,22 +137,27 @@ class _ChangeEmailViewState extends State<ChangeEmailView> {
               ),
 
               const Spacer(),
-              
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 32),
-                child: CustomButton(
-                  label: 'DONE', 
-                  onPressed: _isButtonEnabled 
-                      ? () async {
-                          FocusScope.of(context).unfocus();
-                          final newEmail = _emailController.text.trim();
-                          final password = _passwordController.text.trim();
-                          print('Saving email: $newEmail');
-                          print('Password: $password');
-                        }
-                      : null,
+                child: Column(
+                  spacing: 16,
+                  children: [
+                    if (_errorMessage != null)
+                      Text(
+                        _errorMessage!,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: context.myColors.error,
+                        ),
+                      ),
+                    CustomButton(
+                      label: 'DONE',
+                      onPressed: _isButtonEnabled ? _saveEmail : null,
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
         ),

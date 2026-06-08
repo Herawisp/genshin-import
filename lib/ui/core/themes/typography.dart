@@ -5,16 +5,26 @@ TextTheme createTextTheme() {
   final baseTextTheme = GoogleFonts.nunitoTextTheme(const TextTheme());
 
   return baseTextTheme.copyWith(
-    displayLarge: baseTextTheme.displayLarge?.copyWith(fontWeight: FontWeight.bold),
-    displayMedium: baseTextTheme.displayMedium?.copyWith(fontWeight: FontWeight.bold),
-    displaySmall: baseTextTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
-    
+    displayLarge: baseTextTheme.displayLarge?.copyWith(
+      fontWeight: FontWeight.bold,
+    ),
+    displayMedium: baseTextTheme.displayMedium?.copyWith(
+      fontWeight: FontWeight.bold,
+    ),
+    displaySmall: baseTextTheme.displaySmall?.copyWith(
+      fontWeight: FontWeight.bold,
+    ),
+
     bodyLarge: baseTextTheme.bodyLarge?.copyWith(fontWeight: FontWeight.normal),
-    bodyMedium: baseTextTheme.bodyMedium?.copyWith(fontWeight: FontWeight.normal),
+    bodyMedium: baseTextTheme.bodyMedium?.copyWith(
+      fontWeight: FontWeight.normal,
+    ),
     bodySmall: baseTextTheme.bodySmall?.copyWith(fontWeight: FontWeight.normal),
 
     titleLarge: baseTextTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-    titleMedium: baseTextTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+    titleMedium: baseTextTheme.titleMedium?.copyWith(
+      fontWeight: FontWeight.bold,
+    ),
     titleSmall: baseTextTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
 
     labelLarge: TextStyle(
@@ -52,21 +62,12 @@ TextTheme createTextTheme() {
 }
 
 extension CustomLabels on TextTheme {
-  TextStyle get tinyLabelLarge => const TextStyle(
-    fontFamily: 'HYWenHei',
-    fontSize: 8,
-    height: 12 / 8,
-  );
+  TextStyle get tinyLabelLarge =>
+      const TextStyle(fontFamily: 'HYWenHei', fontSize: 8, height: 12 / 8);
 
-  TextStyle get tinyLabelMedium => const TextStyle(
-    fontFamily: 'HYWenHei',
-    fontSize: 6,
-    height: 8 / 6,
-  );
+  TextStyle get tinyLabelMedium =>
+      const TextStyle(fontFamily: 'HYWenHei', fontSize: 6, height: 8 / 6);
 
-  TextStyle get tinyLabelSmall => const TextStyle(
-    fontFamily: 'HYWenHei',
-    fontSize: 4,
-    height: 6 / 4,
-  );
+  TextStyle get tinyLabelSmall =>
+      const TextStyle(fontFamily: 'HYWenHei', fontSize: 4, height: 6 / 4);
 }

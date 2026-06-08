@@ -37,29 +37,28 @@ void showSuccessBottomSheet({
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              
+
               Text(
                 "Check your email!",
                 style: Theme.of(modalContext).textTheme.labelLarge?.copyWith(
                   color: context.myColors.neutralDarkest,
                 ),
               ),
-              
+
               Text.rich(
                 TextSpan(
                   text: "We’ve sent an email to ",
                   children: [
                     TextSpan(
                       text: email,
-                      style: Theme.of(modalContext).textTheme.labelSmall?.copyWith(
-                        color: context.myColors.neutralDarkest,
-                      ),
+                      style: Theme.of(modalContext).textTheme.labelSmall
+                          ?.copyWith(color: context.myColors.neutralDarkest),
                     ),
                     TextSpan(
-                      text: ".\nDidn’t receive it? Check your spam folder and try again.",
-                      style: Theme.of(modalContext).textTheme.bodySmall?.copyWith(
-                        color: context.myColors.neutralDarkest,
-                      ),
+                      text:
+                          ".\nDidn’t receive it? Check your spam folder and try again.",
+                      style: Theme.of(modalContext).textTheme.bodySmall
+                          ?.copyWith(color: context.myColors.neutralDarkest),
                     ),
                   ],
                 ),
@@ -68,7 +67,7 @@ void showSuccessBottomSheet({
                   color: context.myColors.neutralDarkest,
                 ),
               ),
-              
+
               CustomButton(
                 label: "OK",
                 onPressed: () async {

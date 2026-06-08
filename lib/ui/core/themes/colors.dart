@@ -17,7 +17,6 @@ class MyColors extends ThemeExtension<MyColors> {
   final Color? neutralLightest;
   final Color? darken;
 
-  
   const MyColors({
     required this.primary,
     required this.primaryVariant,
@@ -35,7 +34,7 @@ class MyColors extends ThemeExtension<MyColors> {
     required this.neutralLightest,
     required this.darken,
   });
-  
+
   @override
   MyColors copyWith({
     Color? primary,
@@ -84,11 +83,19 @@ class MyColors extends ThemeExtension<MyColors> {
       primary: Color.lerp(primary, other.primary, t),
       primaryVariant: Color.lerp(primaryVariant, other.primaryVariant, t),
       primaryLight: Color.lerp(primaryLight, other.primaryLight, t),
-      primaryVariantLight: Color.lerp(primaryVariantLight, other.primaryVariantLight, t),
+      primaryVariantLight: Color.lerp(
+        primaryVariantLight,
+        other.primaryVariantLight,
+        t,
+      ),
       error: Color.lerp(error, other.error, t),
       errorVariant: Color.lerp(errorVariant, other.errorVariant, t),
       errorLight: Color.lerp(errorLight, other.errorLight, t),
-      errorVariantLight: Color.lerp(errorVariantLight, other.errorVariantLight, t),
+      errorVariantLight: Color.lerp(
+        errorVariantLight,
+        other.errorVariantLight,
+        t,
+      ),
       neutralDarkest: Color.lerp(neutralDarkest, other.neutralDarkest, t),
       neutralMidDark: Color.lerp(neutralMidDark, other.neutralMidDark, t),
       neutralDark: Color.lerp(neutralDark, other.neutralDark, t),

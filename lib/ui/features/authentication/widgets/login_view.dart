@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genshin_import/data/services/auth_session.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
 import 'package:genshin_import/ui/core/widgets/appbar/appbar.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
@@ -72,7 +73,7 @@ class _LoginViewState extends State<LoginView> {
                             password: _passwordController.text,
                           );
                           if (success && context.mounted) {
-                            context.go('/');
+                            context.go(AuthSession.homeRoute);
                           }
                         },
                 ),
@@ -102,14 +103,11 @@ class _LoginViewState extends State<LoginView> {
                       final success = await viewModel.loginWithGoogle();
 
                       if (success && context.mounted) {
-                        context.go('/');
+                        context.go(AuthSession.homeRoute);
                       }
                     },
-              icon: Image.asset(
-                'assets/images/Google.png',
-                height: 24,
-              ),
-            )
+              icon: Image.asset('assets/images/Google.png', height: 24),
+            ),
           ],
         ),
       ),

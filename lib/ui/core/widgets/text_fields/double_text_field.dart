@@ -17,8 +17,8 @@ class DoubleTextField extends StatefulWidget {
   final IconData? bottomFieldTrailingIcon;
   final VoidCallback? bottomFieldOnTrailingIconPressed;
   final TextEditingController bottomFieldController;
-  
-  final ValueChanged<String>? onBottomFieldSubmitted; 
+
+  final ValueChanged<String>? onBottomFieldSubmitted;
 
   const DoubleTextField({
     super.key,
@@ -45,7 +45,7 @@ class DoubleTextField extends StatefulWidget {
 class _DoubleTextFieldState extends State<DoubleTextField> {
   late final FocusNode _topFocusNode;
   late final FocusNode _bottomFocusNode;
-  
+
   late bool _topObscureText;
   late bool _bottomObscureText;
 
@@ -73,10 +73,7 @@ class _DoubleTextFieldState extends State<DoubleTextField> {
         bottomLeft: isTop ? Radius.zero : Radius.circular(8),
         bottomRight: isTop ? Radius.zero : Radius.circular(8),
       ),
-      borderSide: BorderSide(
-        color: context.myColors.neutralLight!,
-        width: 2,
-      ),
+      borderSide: BorderSide(color: context.myColors.neutralLight!, width: 2),
     );
   }
 
@@ -122,17 +119,22 @@ class _DoubleTextFieldState extends State<DoubleTextField> {
                 focusedBorder: _buildOutlineInputBorder(isTop: true),
                 suffixIcon: widget.topFieldIsPassword
                     ? IconButton(
-                        icon: Icon(_topObscureText ? Icons.visibility : Icons.visibility_off),
+                        icon: Icon(
+                          _topObscureText
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
                         color: context.myColors.neutralDark,
-                        onPressed: () => setState(() => _topObscureText = !_topObscureText),
+                        onPressed: () =>
+                            setState(() => _topObscureText = !_topObscureText),
                       )
                     : widget.topFieldTrailingIcon != null
-                        ? IconButton(
-                            icon: Icon(widget.topFieldTrailingIcon),
-                            color: context.myColors.neutralDark,
-                            onPressed: widget.topFieldOnTrailingIconPressed,
-                          )
-                        : null,
+                    ? IconButton(
+                        icon: Icon(widget.topFieldTrailingIcon),
+                        color: context.myColors.neutralDark,
+                        onPressed: widget.topFieldOnTrailingIconPressed,
+                      )
+                    : null,
               ),
             ),
 
@@ -148,9 +150,9 @@ class _DoubleTextFieldState extends State<DoubleTextField> {
                 ),
                 cursorColor: context.myColors.primary,
                 textInputAction: TextInputAction.done,
-                
-                onSubmitted: widget.onBottomFieldSubmitted, 
-                
+
+                onSubmitted: widget.onBottomFieldSubmitted,
+
                 decoration: InputDecoration(
                   hintText: widget.bottomFieldHintText,
                   hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -163,17 +165,23 @@ class _DoubleTextFieldState extends State<DoubleTextField> {
                   focusedBorder: _buildOutlineInputBorder(isTop: false),
                   suffixIcon: widget.bottomFieldIsPassword
                       ? IconButton(
-                          icon: Icon(_bottomObscureText ? Icons.visibility : Icons.visibility_off),
+                          icon: Icon(
+                            _bottomObscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
                           color: context.myColors.neutralDark,
-                          onPressed: () => setState(() => _bottomObscureText = !_bottomObscureText),
+                          onPressed: () => setState(
+                            () => _bottomObscureText = !_bottomObscureText,
+                          ),
                         )
                       : widget.bottomFieldTrailingIcon != null
-                          ? IconButton(
-                              icon: Icon(widget.bottomFieldTrailingIcon),
-                              color: context.myColors.neutralDark,
-                              onPressed: widget.bottomFieldOnTrailingIconPressed,
-                            )
-                          : null,
+                      ? IconButton(
+                          icon: Icon(widget.bottomFieldTrailingIcon),
+                          color: context.myColors.neutralDark,
+                          onPressed: widget.bottomFieldOnTrailingIconPressed,
+                        )
+                      : null,
                 ),
               ),
             ),
@@ -184,9 +192,9 @@ class _DoubleTextFieldState extends State<DoubleTextField> {
         if (widget.errorText != null)
           Text(
             widget.errorText!,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.myColors.error,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.myColors.error),
           ),
 
         // Supporting text

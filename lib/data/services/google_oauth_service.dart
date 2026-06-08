@@ -15,7 +15,7 @@ class GoogleOAuthResult {
 class GoogleOAuthService {
   static const String? _clientId = null;
   static const String _serverClientId =
-      '145248357277-642g5gh6k7shq9h4ik302brfeeo72r46.apps.googleusercontent.com';
+      '315455377221-0et6hdd2nrd1ug6v0ao1n472isi259rc.apps.googleusercontent.com';
 
   bool _initialized = false;
 
@@ -34,6 +34,7 @@ class GoogleOAuthService {
       throw Exception('Google Sign-In is not supported on this platform');
     }
 
+    await signIn.signOut();
     final account = await signIn.authenticate();
     final authentication = account.authentication;
 

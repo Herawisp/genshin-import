@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
-import 'package:go_router/go_router.dart';
 
 /* =================================================================================================== */
 /* =================================================================================================== */
@@ -10,6 +9,9 @@ class ConfirmationDialog extends StatelessWidget {
   final String title;
   final String subtitle;
   final bool deletionPage;
+  final int? quantity;
+  final double? totalPrice;
+  final String? warningMessage;
   final Future<void> Function()? onCancel;
   final Future<void> Function()? onAccept;
 
@@ -18,17 +20,18 @@ class ConfirmationDialog extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.deletionPage,
+    this.quantity,
+    this.totalPrice,
+    this.warningMessage,
     required this.onCancel,
-    required this.onAccept
+    required this.onAccept,
   });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: context.myColors.neutralLightest,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Column(
         children: [
           Text(
@@ -37,38 +40,42 @@ class ConfirmationDialog extends StatelessWidget {
               color: context.myColors.neutralDarkest,
             ),
           ),
-    
+
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: context.myColors.neutralDarkest,
             ),
           ),
-        ]
+        ],
       ),
-      
-      content: deletionPage ? const DeletionWarning() : const CostBreakdown(),
-    
+
+      content: deletionPage
+          ? DeletionWarning(message: warningMessage)
+          : CostBreakdown(quantity: quantity, totalPrice: totalPrice),
+
       actions: [
         Row(
           spacing: 16,
-          
+
           children: [
             Expanded(
               child: CustomButton(
-                label: 'CANCEL', 
+                label: 'CANCEL',
                 onPressed: onCancel,
                 variant: ButtonVariant.neutral,
               ),
             ),
-          
+
             Expanded(
               child: CustomButton(
                 label: deletionPage ? 'DELETE' : 'CONFIRM',
                 onPressed: onAccept,
-                variant: deletionPage ? ButtonVariant.error : ButtonVariant.primary,
+                variant: deletionPage
+                    ? ButtonVariant.error
+                    : ButtonVariant.primary,
               ),
-            )
+            ),
           ],
         ),
       ],
@@ -80,43 +87,51 @@ class ConfirmationDialog extends StatelessWidget {
 /* =================================================================================================== */
 
 class CostBreakdown extends StatelessWidget {
-  const CostBreakdown({
-    super.key,
-  });
+  final int? quantity;
+  final double? totalPrice;
+
+  const CostBreakdown({super.key, this.quantity, this.totalPrice});
+
+  String _formatPrice(double price) {
+    if (price % 1 == 0) {
+      return '\$${price.toInt()}';
+    }
+
+    return '\$${price.toStringAsFixed(2)}';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final currentQuantity = quantity;
+    final currentTotalPrice = totalPrice;
+
     return Container(
       decoration: ShapeDecoration(
         color: context.myColors.neutralMidLight,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       ),
-    
+
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: IntrinsicHeight(
           child: Column(
             spacing: 8,
-          
+
             children: [
               CostBreakdownItem(
-                label: 'Item Cost',
-                value: '\$1000',
+                label: 'Quantity',
+                value: currentQuantity?.toString() ?? '-',
               ),
               CostBreakdownItem(
-                label: 'Your Balance',
-                value: '\$1200',
+                label: 'Total Price',
+                value: currentTotalPrice == null
+                    ? '-'
+                    : _formatPrice(currentTotalPrice),
               ),
-              CostBreakdownItem(
-                label: 'Balance After Purchase',
-                value: '\$200',
-              ),
-            ]
+            ],
           ),
         ),
-      )
+      ),
     );
   }
 }
@@ -137,7 +152,7 @@ class CostBreakdownItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children:[
+      children: [
         Row(
           children: [
             Expanded(
@@ -157,12 +172,8 @@ class CostBreakdownItem extends StatelessWidget {
           ],
         ),
         SizedBox(height: 4),
-        Divider(
-          color: context.myColors.neutralDark,
-          height: 1,
-          thickness: 1,
-        ),
-      ]
+        Divider(color: context.myColors.neutralDark, height: 1, thickness: 1),
+      ],
     );
   }
 }
@@ -171,9 +182,9 @@ class CostBreakdownItem extends StatelessWidget {
 /* =================================================================================================== */
 
 class DeletionWarning extends StatelessWidget {
-  const DeletionWarning({
-    super.key,
-  });
+  final String? message;
+
+  const DeletionWarning({super.key, this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -185,27 +196,25 @@ class DeletionWarning extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
           side: BorderSide(
             color: context.myColors.errorVariantLight!,
-            width: 2
-          )
+            width: 2,
+          ),
         ),
       ),
-        
+
       child: Row(
         spacing: 16,
         children: [
-          Icon(
-            Icons.error,
-            color: context.myColors.error,
-          ),
-        
+          Icon(Icons.error, color: context.myColors.error),
+
           Expanded(
             child: Text(
-              'Deleting this item will remove it from your inventory permanently',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: context.myColors.error
-              ),
+              message ??
+                  'Deleting this item will remove it from your inventory permanently',
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: context.myColors.error),
             ),
-          )
+          ),
         ],
       ),
     );

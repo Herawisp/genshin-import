@@ -1,139 +1,150 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:genshin_import/data/models/weapon.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
-import 'package:genshin_import/ui/features/product/widgets/confirmation_dialog.dart';
-import 'package:genshin_import/ui/features/product/widgets/product_detail_view.dart';
 import 'package:go_router/go_router.dart';
 
-/* =================================================================================================== */
-/* =================================================================================================== */
-
-class ProductCard extends StatefulWidget {
-  final Product product;
-  final String weaponImagePath;
-  final bool? showActions;
+class ProductCard extends StatelessWidget {
+  final Weapon weapon;
+  final bool showActions;
   final bool deletionPage;
+  final VoidCallback? onChanged;
 
   const ProductCard({
     super.key,
-    required this.product,
-    this.weaponImagePath = 'assets/images/Weapon_image.png',
+    required this.weapon,
     this.showActions = false,
     required this.deletionPage,
+    this.onChanged,
   });
 
-  @override
-  State<ProductCard> createState() => _ProductCardState();
-}
+  Future<void> _openDetail(BuildContext context) async {
+    final changed = await context.push<bool>(
+      '/product_detail',
+      extra: {'weaponId': weapon.id, 'deletionPage': deletionPage},
+    );
 
-/* =================================================================================================== */
-/* =================================================================================================== */
+    if (changed == true) {
+      onChanged?.call();
+    }
+  }
 
-class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.push(
-        '/product_detail',
-        extra: {
-          'product': widget.product,
-          'deletionPage': widget.deletionPage, // Your extra variable
-        },
-      ),
-      
+      onTap: () => _openDetail(context),
       child: Container(
         width: 150,
         height: 215,
-      
         decoration: ShapeDecoration(
           color: context.myColors.neutralMidLight,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          shadows: [
+          shadows: const [
             BoxShadow(
               color: Color(0x3F000000),
               blurRadius: 8,
               offset: Offset(0, 4),
               spreadRadius: 2,
-            )
-          ], 
+            ),
+          ],
         ),
-      
         child: Column(
           mainAxisSize: MainAxisSize.min,
-        
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(16),
+                ),
                 child: Stack(
                   children: [
-            
                     Positioned.fill(
                       child: Image.asset(
                         'assets/images/Product_card_background.png',
                         fit: BoxFit.cover,
                       ),
                     ),
-                    
                     Positioned.fill(
-                      child: Image.asset(
-                        widget.weaponImagePath,
+                      child: WeaponImage(
+                        image: weapon.image,
                         fit: BoxFit.cover,
-                      )
+                      ),
                     ),
-
-                    if (widget.showActions == true) ...[
-                      ActionButtons(product: widget.product)
-                    ]
+                    if (showActions)
+                      ActionButtons(weapon: weapon, onChanged: onChanged),
                   ],
                 ),
               ),
             ),
-      
-            // PRODUCT INFO
             ProductInfo(
-              productName: widget.product.productName,
-              stock: widget.product.stock,
-              price: widget.product.price,
-            )
-          ]
+              productName: weapon.name,
+              stock: weapon.stock,
+              price: weapon.formattedPrice,
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-/* =================================================================================================== */
-/* =================================================================================================== */
+class WeaponImage extends StatelessWidget {
+  final String image;
+  final BoxFit fit;
 
-class ActionButtons extends StatelessWidget {
-  final Product product;
+  const WeaponImage({super.key, required this.image, required this.fit});
 
-  const ActionButtons({
-    super.key,
-    required this.product,
-  });
+  @override
+  Widget build(BuildContext context) {
+    final imagePath = image.trim();
 
-  void _showConfirmation(BuildContext context) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: context.myColors.darken,
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return Image.network(
+        imagePath,
+        fit: fit,
+        errorBuilder: (_, __, ___) => _fallback(),
+      );
+    }
 
-      builder: (BuildContext dialogContext) {
-        return ConfirmationDialog(
-          title: 'Delete item?',
-          subtitle: 'Are you sure you want to delete this item?\nThis action cannot be undone.',
-          deletionPage: true,
-          onCancel: () async {context.pop();},
-          onAccept: () async {context.pop();},
-        );
-      },
+    if (imagePath.startsWith('assets/')) {
+      return Image.asset(
+        imagePath,
+        fit: fit,
+        errorBuilder: (_, __, ___) => _fallback(),
+      );
+    }
+
+    return Image.file(
+      File(imagePath),
+      fit: fit,
+      errorBuilder: (_, __, ___) => _fallback(),
     );
   }
 
-  /* ================================================================================================= */
+  Widget _fallback() {
+    return Image.asset('assets/images/Weapon_image.png', fit: fit);
+  }
+}
+
+class ActionButtons extends StatelessWidget {
+  final Weapon weapon;
+  final VoidCallback? onChanged;
+
+  const ActionButtons({super.key, required this.weapon, this.onChanged});
+
+  Future<void> _openForm(BuildContext context) async {
+    final changed = await context.push<bool>(
+      '/admin/product-form',
+      extra: {'weapon': weapon},
+    );
+
+    if (changed == true) {
+      onChanged?.call();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,34 +154,20 @@ class ActionButtons extends StatelessWidget {
         spacing: 4,
         children: [
           CustomIconButton(
-            icon: Icons.edit, 
-            onPressed: () => context.push(
-              '/product_detail',
-              extra: {
-                'product': product,
-                'deletionPage': false, // Your extra variable
-              },
-            ),
+            icon: Icons.edit,
+            onPressed: () => _openForm(context),
             color: context.myColors.neutralLightest,
           ),
-          CustomIconButton(
-            icon: Icons.delete, 
-            onPressed: () => _showConfirmation(context),
-            color: context.myColors.errorLight,
-          ),
-        ]
+        ],
       ),
     );
   }
 }
 
-/* =================================================================================================== */
-/* =================================================================================================== */
-
 class ProductInfo extends StatelessWidget {
   final String productName;
   final int stock;
-  final int price;
+  final String price;
 
   const ProductInfo({
     super.key,
@@ -186,45 +183,30 @@ class ProductInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 8,
-              
         children: [
           Text(
             productName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: context.myColors.neutralDarkest
+              color: context.myColors.neutralDarkest,
             ),
           ),
-          
-          Divider(
-            height: 1,
-            color: context.myColors.neutralLight,
-          ),
-          
+          Divider(height: 1, color: context.myColors.neutralLight),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             spacing: 8,
-              
             children: [
-              ProductStat(
-                label: stock.toString(),
-                icon: Icons.inventory,
-              ),
-          
-              ProductStat(
-                label: '\$$price',
-                icon: Icons.local_offer,
-              ),
+              ProductStat(label: stock.toString(), icon: Icons.inventory),
+              ProductStat(label: '\$$price', icon: Icons.local_offer),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 }
-
-/* =================================================================================================== */
-/* =================================================================================================== */
 
 class CustomIconButton extends StatelessWidget {
   final IconData icon;
@@ -254,42 +236,26 @@ class CustomIconButton extends StatelessWidget {
   }
 }
 
-/* =================================================================================================== */
-/* =================================================================================================== */
-
 class ProductStat extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const ProductStat({
-    super.key,
-    required this.icon,
-    required this.label, 
-  });
+  const ProductStat({super.key, required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 4,
-    
       children: [
-        Icon(
-          icon,
-          color: context.myColors.primary,
-          size: 16,
-        ),
-    
+        Icon(icon, color: context.myColors.primary, size: 16),
         Text(
           label,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: context.myColors.neutralDarkest
+            color: context.myColors.neutralDarkest,
           ),
         ),
       ],
     );
   }
 }
-
-/* =================================================================================================== */
-/* =================================================================================================== */

@@ -10,6 +10,10 @@ class SingleTextField extends StatefulWidget {
   final IconData? trailingIcon;
   final VoidCallback? onTrailingIconPressed;
   final TextEditingController controller;
+  final int? minLines;
+  final int? maxLines;
+  final TextInputAction? textInputAction;
+  final TextInputType? keyboardType;
 
   const SingleTextField({
     super.key,
@@ -21,6 +25,10 @@ class SingleTextField extends StatefulWidget {
     this.trailingIcon,
     this.onTrailingIconPressed,
     required this.controller,
+    this.minLines,
+    this.maxLines = 1,
+    this.textInputAction,
+    this.keyboardType,
   });
 
   @override
@@ -31,7 +39,6 @@ class SingleTextField extends StatefulWidget {
 /* ======================================================================================= */
 
 class _SingleTextFieldState extends State<SingleTextField> {
-
   // late FocusNode _focusNode;
   late bool _obscureText = widget.isPassword;
 
@@ -64,7 +71,7 @@ class _SingleTextFieldState extends State<SingleTextField> {
         },
       );
     }
-    
+
     if (widget.trailingIcon != null) {
       return IconButton(
         icon: Icon(widget.trailingIcon),
@@ -77,7 +84,7 @@ class _SingleTextFieldState extends State<SingleTextField> {
   }
 
   /* ================================================================================== */
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -85,31 +92,34 @@ class _SingleTextFieldState extends State<SingleTextField> {
       spacing: 8,
 
       children: [
-
         // Label text
         if (widget.labelText != null)
-        Text(
-          widget.labelText!,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: context.myColors.neutralDarkest
+          Text(
+            widget.labelText!,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: context.myColors.neutralDarkest,
+            ),
           ),
-        ),
 
         // Text field
         TextField(
           controller: widget.controller,
           // focusNode: _focusNode,
           obscureText: _obscureText,
+          minLines: widget.isPassword ? 1 : widget.minLines,
+          maxLines: widget.isPassword ? 1 : widget.maxLines,
+          keyboardType: widget.keyboardType,
+          textInputAction: widget.textInputAction,
 
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: context.myColors.neutralDarkest
+            color: context.myColors.neutralDarkest,
           ),
 
           cursorColor: context.myColors.primary,
           decoration: InputDecoration(
             hintText: widget.hintText,
             hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: context.myColors.neutralDark
+              color: context.myColors.neutralDark,
             ),
 
             filled: true,
@@ -122,7 +132,7 @@ class _SingleTextFieldState extends State<SingleTextField> {
               borderSide: BorderSide(
                 color: context.myColors.neutralLight!,
                 width: 2,
-              )
+              ),
             ),
 
             focusedBorder: OutlineInputBorder(
@@ -130,30 +140,30 @@ class _SingleTextFieldState extends State<SingleTextField> {
               borderSide: BorderSide(
                 color: context.myColors.neutralLight!,
                 width: 2,
-              )
+              ),
             ),
 
-            suffixIcon: _buildSuffixIcon(context)
+            suffixIcon: _buildSuffixIcon(context),
           ),
         ),
 
         // Error text
         if (widget.errorText != null)
-        Text(
-          widget.errorText!,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: context.myColors.error
+          Text(
+            widget.errorText!,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: context.myColors.error),
           ),
-        ),
 
         // Supporting text
         if (widget.supportingText != null)
-        Text(
-          widget.supportingText!,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: context.myColors.neutralDarkest
+          Text(
+            widget.supportingText!,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: context.myColors.neutralDarkest,
+            ),
           ),
-        ),
       ],
     );
   }

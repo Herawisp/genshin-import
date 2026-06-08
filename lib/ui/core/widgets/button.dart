@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:genshin_import/ui/core/themes/theme.dart';
 
-enum ButtonVariant { 
-  primary, neutral, error
-}
+enum ButtonVariant { primary, neutral, error }
 
 class CustomButton extends StatefulWidget {
   final String label;
@@ -31,7 +29,6 @@ class CustomButton extends StatefulWidget {
 /* =================================================================================================== */
 
 class _CustomButtonState extends State<CustomButton> {
-  
   /* ================================================================================================= */
   final WidgetStatesController _controller = WidgetStatesController();
   bool _isLoading = false;
@@ -51,7 +48,7 @@ class _CustomButtonState extends State<CustomButton> {
 
   void _handleStateChange() {
     if (!mounted) return;
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) setState(() {});
     });
@@ -61,11 +58,23 @@ class _CustomButtonState extends State<CustomButton> {
   (Color, Color, Color) _getButtonColors(BuildContext context) {
     switch (widget.variant) {
       case ButtonVariant.primary:
-        return (context.myColors.primary!, context.myColors.primaryVariant!, context.myColors.neutralLightest!);
+        return (
+          context.myColors.primary!,
+          context.myColors.primaryVariant!,
+          context.myColors.neutralLightest!,
+        );
       case ButtonVariant.neutral:
-        return (context.myColors.neutralLightest!, context.myColors.neutralLight!, context.myColors.primary!);
+        return (
+          context.myColors.neutralLightest!,
+          context.myColors.neutralLight!,
+          context.myColors.primary!,
+        );
       case ButtonVariant.error:
-        return (context.myColors.error!, context.myColors.errorVariant!, context.myColors.neutralLightest!);
+        return (
+          context.myColors.error!,
+          context.myColors.errorVariant!,
+          context.myColors.neutralLightest!,
+        );
     }
   }
 
@@ -107,7 +116,7 @@ class _CustomButtonState extends State<CustomButton> {
             top: visuallyPressed ? depth : 0,
             left: 0,
             right: 0,
-            
+
             // THE TOP BUTTON PART
             child: SizedBox(
               height: buttonHeight,
@@ -117,16 +126,20 @@ class _CustomButtonState extends State<CustomButton> {
                 onPressed: isDisabled ? null : _handlePress,
 
                 style: FilledButton.styleFrom(
-                  backgroundColor: isDisabled ? context.myColors.neutralLight : buttonColor,
+                  backgroundColor: isDisabled
+                      ? context.myColors.neutralLight
+                      : buttonColor,
                   shadowColor: Colors.transparent,
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 8.0,
+                  ),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
-                    side: widget.outlined ? BorderSide(
-                      color: shadowColor,
-                      width: 2.0,
-                    ): BorderSide.none,
+                    side: widget.outlined
+                        ? BorderSide(color: shadowColor, width: 2.0)
+                        : BorderSide.none,
                   ),
                 ),
 
@@ -136,24 +149,25 @@ class _CustomButtonState extends State<CustomButton> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 8,
                   children: [
-
                     if (_isLoading)
                       SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(context.myColors.neutralLightest!),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            context.myColors.neutralLightest!,
+                          ),
                         ),
                       )
                     else if (widget.icon != null)
                       widget.icon!,
-                    
+
                     Text(
                       widget.label,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: textColor,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelLarge?.copyWith(color: textColor),
                     ),
                   ],
                 ),

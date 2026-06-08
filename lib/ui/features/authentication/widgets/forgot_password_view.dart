@@ -33,9 +33,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     final viewModel = context.watch<ForgotPasswordViewModel>();
 
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       appBar: const CustomAppbar(icon: Icons.arrow_back),
-      
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
         child: Column(
@@ -45,29 +45,32 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               controller: _emailController,
               labelText: "Forgot password?",
               hintText: "Email address",
-              supportingText: "Enter your email address to receive a link to reset your password.",
+              supportingText:
+                  "Enter your email address to receive a link to reset your password.",
               errorText: viewModel.errorMessage,
             ),
 
             const Spacer(),
 
             CustomButton(
-              label: "NEXT", 
+              label: "NEXT",
               oneShot: true,
               onPressed: viewModel.isLoading
                   ? null
                   : () async {
                       final currentEmail = _emailController.text;
-                      final success = await viewModel.sendPasswordReset(currentEmail);
-                      
+                      final success = await viewModel.sendPasswordReset(
+                        currentEmail,
+                      );
+
                       if (success && context.mounted) {
                         showSuccessBottomSheet(
-                          context: context, 
-                          email: currentEmail
+                          context: context,
+                          email: currentEmail,
                         );
                       }
                     },
-            )
+            ),
           ],
         ),
       ),

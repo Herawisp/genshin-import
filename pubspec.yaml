@@ -39,6 +39,7 @@ dependencies:
   go_router: ^17.0.0
   http: ^1.6.0
   provider: ^6.1.5+1
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +73,9 @@ flutter:
     - assets/images/Product_card_background.png
     - assets/images/product_detail_background.png
     - assets/images/Weapon_image.png
+    - assets/images/profile_icon.png
+    - assets/images/QRdummy.png
+    - assets/images/qris-675x256.png
 
   fonts:
     - family: HYWenHei

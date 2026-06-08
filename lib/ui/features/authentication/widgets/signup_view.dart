@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genshin_import/data/services/auth_session.dart';
 import 'package:genshin_import/ui/core/widgets/appbar/appbar.dart';
 import 'package:genshin_import/ui/core/widgets/button.dart';
 import 'package:genshin_import/ui/core/widgets/text_fields/double_text_field.dart';
@@ -38,9 +39,23 @@ class _SignupViewState extends State<SignupView> {
       email: _emailController.text,
       password: _passwordController.text,
     );
-    
-    if (success && context.mounted) {
-      context.go('/');
+
+    if (!mounted) return;
+
+    if (success) {
+      context.go(AuthSession.homeRoute);
+    }
+  }
+
+  Future<void> _onGoogleSignup(SignupViewModel viewModel) async {
+    if (viewModel.isLoading) return;
+
+    final success = await viewModel.registerWithGoogle();
+
+    if (!mounted) return;
+
+    if (success) {
+      context.go(AuthSession.homeRoute);
     }
   }
 
@@ -49,9 +64,9 @@ class _SignupViewState extends State<SignupView> {
     final viewModel = context.watch<SignupViewModel>();
 
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
+      resizeToAvoidBottomInset: false,
       appBar: const CustomAppbar(icon: Icons.arrow_back),
-      
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
@@ -59,10 +74,10 @@ class _SignupViewState extends State<SignupView> {
             spacing: 32,
             children: [
               DoubleTextField(
-                labelText: "Enter your information here", 
-                topFieldHintText: "Email address", 
-                bottomFieldHintText: "Password", 
-                topFieldController: _emailController, 
+                labelText: "Enter your information here",
+                topFieldHintText: "Email address",
+                bottomFieldHintText: "Password",
+                topFieldController: _emailController,
                 bottomFieldController: _passwordController,
                 errorText: viewModel.errorMessage,
                 bottomFieldIsPassword: true,
@@ -70,25 +85,24 @@ class _SignupViewState extends State<SignupView> {
               ),
 
               CustomButton(
-                label: "SIGN UP", 
+                label: "SIGN UP",
                 oneShot: true,
-                onPressed: viewModel.isLoading ? null : () => _onSignup(viewModel),
+                onPressed: viewModel.isLoading
+                    ? null
+                    : () => _onSignup(viewModel),
               ),
 
               const Spacer(),
 
               CustomButton(
-                icon: Image.asset(
-                  'assets/images/Google.png',
-                  height: 24,
-                ),
+                icon: Image.asset('assets/images/Google.png', height: 24),
                 label: "GOOGLE",
                 variant: ButtonVariant.neutral,
                 outlined: true,
-                onPressed: viewModel.isLoading ? null : () async {
-                  // TODO: implement Google Sign in through ViewModel
-                },
-              )
+                onPressed: viewModel.isLoading
+                    ? null
+                    : () => _onGoogleSignup(viewModel),
+              ),
             ],
           ),
         ),

@@ -8,8 +8,8 @@ class LandingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false, 
-      
+      resizeToAvoidBottomInset: false,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
@@ -25,16 +25,16 @@ class LandingView extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
-              
+
               Column(
                 spacing: 16,
                 children: [
                   CustomButton(
-                    label: "CREATE NEW ACCOUNT", 
+                    label: "CREATE NEW ACCOUNT",
                     onPressed: () => context.push('/signup'),
                   ),
                   CustomButton(
-                    label: "I ALREADY HAVE AN ACCOUNT", 
+                    label: "I ALREADY HAVE AN ACCOUNT",
                     onPressed: () => context.push('/login'),
                     variant: ButtonVariant.neutral,
                     outlined: true,
